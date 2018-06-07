@@ -1,0 +1,222 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="头文件\net">
+      <UniqueIdentifier>{b3d069eb-554b-463b-ba52-214a308e599a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\net">
+      <UniqueIdentifier>{e251cb81-672f-4382-81f6-76d242512190}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\net\poller">
+      <UniqueIdentifier>{5fde0296-4c8b-4abb-bc52-3302227ea17a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="muduo_latch.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="current_thread.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="muduo_condition.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="muduo_thread.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="muduo_mutex.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="thread_local.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="thread_local_singleton.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="muduo_atomic.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="blocking_queue.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="bounded_blocking_queue.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="copyable.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="date.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="time_stamp.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="types.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="time_zone.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="log_stream.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="string_piece.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="logger.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="log_file.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="file_util.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="process_info.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="thread_pool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="async_logging.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="exception.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="weak_callback.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="net\buffer.h">
+      <Filter>头文件\net</Filter>
+    </ClInclude>
+    <ClInclude Include="net\endian.h">
+      <Filter>头文件\net</Filter>
+    </ClInclude>
+    <ClInclude Include="net\muduo_socket.h">
+      <Filter>头文件\net</Filter>
+    </ClInclude>
+    <ClInclude Include="net\inet_address.h">
+      <Filter>头文件\net</Filter>
+    </ClInclude>
+    <ClInclude Include="net\sockets_ops.h">
+      <Filter>头文件\net</Filter>
+    </ClInclude>
+    <ClInclude Include="net\timer.h">
+      <Filter>头文件\net</Filter>
+    </ClInclude>
+    <ClInclude Include="net\callbacks.h">
+      <Filter>头文件\net</Filter>
+    </ClInclude>
+    <ClInclude Include="net\timer_id.h">
+      <Filter>头文件\net</Filter>
+    </ClInclude>
+    <ClInclude Include="net\timer_queue.h">
+      <Filter>头文件\net</Filter>
+    </ClInclude>
+    <ClInclude Include="net\channel.h">
+      <Filter>头文件\net</Filter>
+    </ClInclude>
+    <ClInclude Include="net\event_loop.h">
+      <Filter>头文件\net</Filter>
+    </ClInclude>
+    <ClInclude Include="net\poller.h">
+      <Filter>头文件\net</Filter>
+    </ClInclude>
+    <ClInclude Include="net\epoll_poller.h">
+      <Filter>头文件\net\poller</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="muduo_thread.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="源1.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="muduo_latch.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="muduo_mutex.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="muduo_condition.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="date.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="time_stamp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="time_zone.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="log_stream.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="logger.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="file_util.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="log_file.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="process_info.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="thread_pool.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="async_logging.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="exception.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="net\buffer.cpp">
+      <Filter>源文件\net</Filter>
+    </ClCompile>
+    <ClCompile Include="net\muduo_socket.cpp">
+      <Filter>源文件\net</Filter>
+    </ClCompile>
+    <ClCompile Include="net\inet_address.cpp">
+      <Filter>源文件\net</Filter>
+    </ClCompile>
+    <ClCompile Include="net\sockets_ops.cpp">
+      <Filter>源文件\net</Filter>
+    </ClCompile>
+    <ClCompile Include="timer_queue.cpp">
+      <Filter>源文件\net</Filter>
+    </ClCompile>
+    <ClCompile Include="net\timer_queue.cpp">
+      <Filter>源文件\net</Filter>
+    </ClCompile>
+    <ClCompile Include="net\event_loop.cpp">
+      <Filter>源文件\net</Filter>
+    </ClCompile>
+    <ClCompile Include="net\chanel.cpp">
+      <Filter>源文件\net</Filter>
+    </ClCompile>
+    <ClCompile Include="net\default_poller.cpp">
+      <Filter>头文件\net\poller</Filter>
+    </ClCompile>
+    <ClCompile Include="net\epoll_poller.cpp">
+      <Filter>头文件\net\poller</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

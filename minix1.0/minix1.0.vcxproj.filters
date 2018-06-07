@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="源文件\tty">
+      <UniqueIdentifier>{e8b8b3d0-e15b-4d1c-a9e4-b1130631c669}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\low_level">
+      <UniqueIdentifier>{e0414559-4f55-4e9e-b9d2-ee5bccbded66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\driver">
+      <UniqueIdentifier>{9f2b0bc8-401b-4b04-99db-7494ae69d052}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\kernel">
+      <UniqueIdentifier>{6ea77ea0-a761-4baa-805b-ad004cac62e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\ext2">
+      <UniqueIdentifier>{2c68fd09-58ac-41e9-92bc-442ae7f77996}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="my_fs\vim.c">
+      <Filter>源文件\tty</Filter>
+    </ClCompile>
+    <ClCompile Include="my_fs\tty_io.c">
+      <Filter>源文件\tty</Filter>
+    </ClCompile>
+    <ClCompile Include="my_fs\tool.c">
+      <Filter>源文件\tty</Filter>
+    </ClCompile>
+    <ClCompile Include="my_fs\noodle_printer.c">
+      <Filter>源文件\tty</Filter>
+    </ClCompile>
+    <ClCompile Include="my_fs\ll_rw_blk.c">
+      <Filter>源文件\driver</Filter>
+    </ClCompile>
+    <ClCompile Include="my_fs\truncate.c">
+      <Filter>源文件\low_level</Filter>
+    </ClCompile>
+    <ClCompile Include="my_fs\sys_calls.c">
+      <Filter>源文件\kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="my_fs\super.c">
+      <Filter>源文件\low_level</Filter>
+    </ClCompile>
+    <ClCompile Include="my_fs\namei.c">
+      <Filter>源文件\low_level</Filter>
+    </ClCompile>
+    <ClCompile Include="my_fs\pipe.c">
+      <Filter>源文件\low_level</Filter>
+    </ClCompile>
+    <ClCompile Include="my_fs\mix_error.c">
+      <Filter>源文件\kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="my_fs\M_printf.c">
+      <Filter>源文件\kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="my_fs\kenel.c">
+      <Filter>源文件\kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="my_fs\keybord.c">
+      <Filter>源文件\tty</Filter>
+    </ClCompile>
+    <ClCompile Include="my_fs\file_table.c">
+      <Filter>源文件\low_level</Filter>
+    </ClCompile>
+    <ClCompile Include="my_fs\cmd.c">
+      <Filter>源文件\tty</Filter>
+    </ClCompile>
+    <ClCompile Include="my_fs\dev_init.c">
+      <Filter>源文件\driver</Filter>
+    </ClCompile>
+    <ClCompile Include="my_fs\block_dev.c">
+      <Filter>源文件\driver</Filter>
+    </ClCompile>
+    <ClCompile Include="my_fs\buffer.c">
+      <Filter>源文件\low_level</Filter>
+    </ClCompile>
+    <ClCompile Include="my_fs\char_dev.c">
+      <Filter>源文件\driver</Filter>
+    </ClCompile>
+    <ClCompile Include="my_fs\file_dev.c">
+      <Filter>源文件\driver</Filter>
+    </ClCompile>
+    <ClCompile Include="my_fs\inode.c">
+      <Filter>源文件\low_level</Filter>
+    </ClCompile>
+    <ClCompile Include="my_fs\bit_map.c">
+      <Filter>源文件\low_level</Filter>
+    </ClCompile>
+    <ClCompile Include="my_fs\bitmap.c">
+      <Filter>源文件\low_level</Filter>
+    </ClCompile>
+    <ClCompile Include="my_fs\open.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="my_fs\stat.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="my_fs\fcntl.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="my_fs\ioctl.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="my_fs\read_write.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="test.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="my_fs\fcntl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="my_fs\file_sys.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="my_fs\mix_const.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="my_fs\mix_erro.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="my_fs\mix_sys.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="my_fs\mix_type.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="my_fs\mm.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="my_fs\stat.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="my_fs\utime.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="my_fs\tool.h">
+      <Filter>源文件\tty</Filter>
+    </ClInclude>
+    <ClInclude Include="my_fs\mix_window.h">
+      <Filter>源文件\tty</Filter>
+    </ClInclude>
+    <ClInclude Include="my_fs\cmd.h">
+      <Filter>源文件\tty</Filter>
+    </ClInclude>
+    <ClInclude Include="my_fs\kernel.h">
+      <Filter>源文件\kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="ext2\ext2_include.h">
+      <Filter>源文件\ext2</Filter>
+    </ClInclude>
+    <ClInclude Include="ext2\list.h">
+      <Filter>源文件\ext2</Filter>
+    </ClInclude>
+    <ClInclude Include="fs.h">
+      <Filter>源文件\ext2</Filter>
+    </ClInclude>
+    <ClInclude Include="ext2\type.h">
+      <Filter>源文件\ext2</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
