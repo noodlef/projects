@@ -62,7 +62,7 @@ namespace muduo
 
 			void decrement()
 			{
-				decrementAndGet();
+				decrement_and_get();
 			}
 
 			T get_and_set(T newValue)

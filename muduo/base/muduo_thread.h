@@ -8,10 +8,16 @@
 #define MUDUO_BASE_THREAD_H
 
 #include"muduo_latch.h"
+#include"types.h" // string
+#include"muduo_latch.h"
+#include"muduo_atomic.h"
+#include<boost/noncopyable.hpp>
+#include<boost/function.hpp>
+#include<pthread.h>
 
 namespace muduo
 {
-
+    // Ïß³Ì
 	class muduo_thread : boost::noncopyable
 	{
 	public:
@@ -24,7 +30,7 @@ namespace muduo
 		int join(); 
 
 		bool started() const { return _started; }
-		pthread_t pthread_Id() const { return _pthread_Id; }
+		pthread_t pthread_id() const { return _pthread_id; }
 		pid_t tid() const { return _tid; }
 		const string& name() const { return _name; }
 
@@ -36,13 +42,13 @@ namespace muduo
 
 		bool                  _started;
 		bool                  _joined;
-		pthread_t             _pthread_Id;
+		pthread_t             _pthread_id;
 		pid_t                 _tid;
 		thread_func           _func;
 		string                _name;
 		count_down_latch      _latch;
 
-		static atomic_Int32   _num;
+		static atomic_int32   _num;
 	};
 
 }

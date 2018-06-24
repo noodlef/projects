@@ -1,5 +1,15 @@
 #include"muduo_mutex.h"
+#include<pthread.h>
+#include<assert.h>
+#include"current_thread.h"
 
+// 检测返回值是否为0
+#define MCHECK(ret) ({                   \
+        typeof(ret) errnum = (ret);      \
+        assert(errnum == 0);             \
+        (void) errnum;                   \
+    })
+//////////////////////////////  muduo_mutex /////////////////////////////////////
 using namespace muduo;
 muduo_mutex::muduo_mutex()
 	: _holder(0)

@@ -7,19 +7,11 @@
 #ifndef MUDUO_BASE_MUTEX_H
 #define MUDUO_BASE_MUTEX_H
 
-#include<assert.h>
 #include<boost/noncopyable.hpp>
-#include<pthread.h>
-
-
-
-#define MCHECK(ret) ({ __typeof__ (ret) errnum = (ret);         \
-                       assert(errnum == 0); (void) errnum;})
-
 
 namespace muduo
 {
-
+    // muduo_mutex 不能是局部对象
 	class muduo_mutex : boost::noncopyable
 	{
 	public:
@@ -48,8 +40,7 @@ namespace muduo
 		pid_t             _holder;
 	};
 
-	
-
+    // helper class used by muduo_mutex
 	class mutex_lock_guard : boost::noncopyable
 	{
 	public:

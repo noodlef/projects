@@ -13,7 +13,7 @@ namespace muduo
 {
 	namespace current_thread
 	{
-		// internal
+		// internal 线程局部变量
 		extern __thread int             t_cached_tid;
 		extern __thread char            t_tid_string[32];
 		extern __thread int             t_tid_string_length;
@@ -22,6 +22,7 @@ namespace muduo
 
 		inline int tid()
 		{
+            // _builtin_expect(expr, value) 告知编译器expr == value的概率很大
 			if (__builtin_expect(t_cached_tid == 0, 0))
 			{
 				cache_tid();
@@ -46,7 +47,7 @@ namespace muduo
 
 		bool is_main_thread();
 
-		void sleep_usec(int64_t usec);
+		//void sleep_usec(int64_t usec);
 	}
 }
 

@@ -1,5 +1,19 @@
 #include"muduo_thread.h"
 #include"current_thread.h"
+#include<assert.h>
+//#include"logger.h"
+#include"exception.h"
+
+#include<errno.h>
+#include<stdio.h>
+#include<unistd.h>
+#include<sys/prctl.h>
+#include<sys/syscall.h>
+#include<sys/types.h>
+#include<linux/unistd.h>
+
+#include<boost/static_assert.hpp>
+#include<boost/type_traits/is_same.hpp>
 
 typedef muduo::muduo_thread::thread_func thread_func;
 
@@ -33,10 +47,11 @@ namespace muduo {
 			thread_func         _func;
 			string              _name;
 			pid_t*              _tid;
-			muduo_latch*        _latch;
+			count_down_latch*   _latch;
+
 
 			thread_data(const thread_func& func, const string& name,
-				pid_t* tid, muduo_latch* latch)
+				pid_t* tid, count_down_latch* latch)
 				: _func(func), _name(name), _tid(tid), _latch(latch)
 			{ }
 		};
@@ -45,30 +60,31 @@ namespace muduo {
 
 static void run_in_thread(thread_func func)
 {
+	using namespace muduo::current_thread;
 	try
 	{
 		func();
 		muduo::current_thread::t_thread_name = "finished";
 	}
-    catch (const muduo::exception& ex)
+    catch (const muduo::muduo_exception& ex)
 	{
-		muduo::current_thread::t_thread_name = "crashed";
-		fprintf(stderr, "exception caught in Thread %s\n", _name.c_str());
-		fprintf(stderr, "reason: %s\n", ex.what());
+		fprintf(stderr, "exception caught in Thread %s\n",t_thread_name);
+	    fprintf(stderr, "reason: %s\n", ex.what());
 		fprintf(stderr, "stack trace: %s\n", ex.stack_trace());
+        muduo::current_thread::t_thread_name = "crashed";
 		abort();/* kill the process */
 	}
 	catch (const std::exception& ex)
 	{
-		muduo::current_thread::t_thread_name = "crashed";
-		fprintf(stderr, "exception caught in Thread %s\n", _name.c_str());
+		fprintf(stderr, "exception caught in Thread %s\n",t_thread_name); 
 		fprintf(stderr, "reason: %s\n", ex.what());
+		muduo::current_thread::t_thread_name = "crashed";
 		abort();
 	}
 	catch (...)
 	{
+		fprintf(stderr, "unknown exception caught in Thread %s\n",t_thread_name); 
 		muduo::current_thread::t_thread_name = "crashed";
-		fprintf(stderr, "unknown exception caught in Thread %s\n", _name.c_str());
 		throw; // rethrow
 	}
 }
@@ -88,61 +104,9 @@ static void* start_thread(void* obj)
 	::prctl(PR_SET_NAME, muduo::current_thread::t_thread_name);/* syscall -> set thread_name */
 
 	run_in_thread(data->_func);
-	delete obj;
+	delete data; 
 	return NULL;
 }
-
-
-
-
-
-
-/* namespace current_thread */
-namespace muduo {
-	namespace current_thread {
-
-		/* definitions */
-		__thread int t_cached_tid = 0;
-		__thread char t_tid_string[32];
-		__thread int t_tid_string_length = 6;
-		__thread const char* t_thread_name = "unknown";
-		const bool same_type = boost::is_same<int, pid_t>::value;
-		BOOST_STATIC_ASSERT(same_type);
-
-		pid_t get_tid()
-		{
-			return static_cast<pid_t>(::syscall(SYS_gettid));
-		}
-
-		void cache_tid()
-		{
-			if (t_cached_tid == 0) {
-				t_cached_tid = get_tid();
-				t_tid_string_length = snprintf(t_tid_string,
-					sizeof t_tid_string, "%5d ", t_cached_tid);
-			}
-		}
-
-		bool is_main_thread()
-		{
-			return tid() == ::getpid();
-		}
-
-		void sleep_usec(int64_t usec)
-		{
-			struct timespec ts = { 0, 0 };
-			ts.tv_sec = static_cast<time_t>(usec /
-				times_tamp::kMicro_seconds_perSecond);
-			ts.tv_nsec = static_cast<long>(usec %
-				time_stamp::kMicro_seconds_perSecond * 1000);
-			::nanosleep(&ts, NULL);/* task_interrputible */
-		}
-
-	}
-}
-
-
-
 
 
 /*
@@ -151,21 +115,20 @@ namespace muduo {
 
 using namespace muduo;
 
-atomic_Int32 muduo_thread::_num;
+atomic_int32 muduo_thread::_num;
 
 muduo_thread::muduo_thread(const thread_func& func, const string& n)
-	: _started(false), _joined(false), _pthread_Id(0),
+	: _started(false), _joined(false), _pthread_id(0),
 	  _tid(0), _func(func), _name(n), _latch(1)
 {
 	_set_default_name();
 }
 
-
 muduo_thread::~muduo_thread()
 {
 	if (_started && !_joined)
 	{
-		pthread_detach(_pthread_Id);
+		pthread_detach(_pthread_id);
 	}
 }
 
@@ -186,11 +149,11 @@ void muduo_thread::start()
 	_started = true;
 	// FIXME: move(func_)
 	detail::thread_data* data = new detail::thread_data(_func, _name, &_tid, &_latch);
-	if (pthread_create(&_pthread_Id, NULL, start_thread, data))
+	if (pthread_create(&_pthread_id, NULL, start_thread, data))
 	{
 		_started = false;
 		delete data; // or no delete?
-		LOG_SYSFATAL << "Failed in pthread_create";
+		//LOG_SYSFATAL << "Failed in pthread_create";
 	}
 	else
 	{
@@ -204,5 +167,5 @@ int muduo_thread::join()
 	assert(_started);
 	assert(!_joined);
 	_joined = true;
-	return ::pthread_join(pthread_Id, NULL);
+	return ::pthread_join(_pthread_id, NULL);
 }
