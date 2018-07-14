@@ -101,9 +101,11 @@ namespace muduo
 		self& operator<<(const string_piece& v);
 		self& operator<<(const buffer_t& v);
 		
-
+        /* */ 
 		void append(const char* data, int len) { _buffer.append(data, len); }
+
 		const buffer_t& buffer() const { return _buffer; }
+
 		void reset_buffer() { _buffer.reset(); }
 
 	private:
@@ -114,6 +116,7 @@ namespace muduo
 		static const int kmax_numeric_size = 32;
 	};
 
+    /* 格式化输出，fmt("%d", val)*/ 
 	class fmt 
 	{
 	public:

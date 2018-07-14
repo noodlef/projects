@@ -11,8 +11,8 @@
 
 #include <boost/bind.hpp>
 #include <boost/noncopyable.hpp>
-#include <boost/scoped_ptr.hpp>
 #include <boost/ptr_container/ptr_vector.hpp>
+#include <vector>
 
 namespace muduo
 {
@@ -42,8 +42,10 @@ namespace muduo
 		void thread_func();
 
 		typedef muduo::detail::fixed_buffer<muduo::detail::klarge_buffer> buffer_t;
-		typedef boost::ptr_vector<buffer_t> buffer_vector;
-		typedef buffer_vector::auto_type buffer_ptr;
+		//typedef boost::ptr_vector<buffer_t> buffer_vector;
+		typedef std::vector<buffer_t*> buffer_vector;
+        //typedef buffer_vector::auto_type buffer_ptr;
+        typedef buffer_t*  buffer_ptr;
 
 		const int                   _flush_interval;
 		bool                        _running;

@@ -114,11 +114,16 @@ namespace muduo
 
 			string readBytes(int n)
 			{
-				char buf[n];
+				char* buf = new char[n];
+                if(!buf) return string();
 				size_t nr = ::fread(buf, 1, n, _fp);
-				if (nr != n)
+				if (nr != n){
+                    delete buf;
 					throw logic_error("no enough data");
-				return string(buf, n);
+                }
+                string res(buf, n);
+                delete buf;
+				return res; 
 			}
 
 			int32_t readInt32()
@@ -213,7 +218,7 @@ namespace muduo
 			return true;
 		}
 
-		const Localtime* findLocaltime(const TimeZone::Data& data, Transition sentry, Comp comp)
+		const Localtime* findLocaltime(const time_zone::Data& data, Transition sentry, Comp comp)
 		{
 			const Localtime* local = NULL;
 
@@ -253,28 +258,28 @@ namespace muduo
 
 
 ////////////////////////////// time_zone /////////////////////////////////////
-TimeZone::TimeZone(const char* zonefile)
-	: data_(new TimeZone::Data)
+time_zone::TimeZone(const char* zonefile)
+	: _data(new time_zone::Data)
 {
-	if (!detail::readTimeZoneFile(zonefile, data_.get()))
+	if (!detail::readTimeZoneFile(zonefile, _data.get())
 	{
-		data_.reset();
+		_data.reset();
 	}
 }
 
 TimeZone::TimeZone(int eastOfUtc, const char* name)
-	: data_(new TimeZone::Data)
+	: _data(new TimeZone::Data)
 {
-	data_->localtimes.push_back(detail::Localtime(eastOfUtc, false, 0));
-	data_->abbreviation = name;
+	_data->localtimes.push_back(detail::Localtime(eastOfUtc, false, 0));
+	_data->abbreviation = name;
 }
 
 struct tm TimeZone::toLocalTime(time_t seconds) const
 {
 	struct tm localTime;
 	bzero(&localTime, sizeof(localTime));
-	assert(data_ != NULL);
-	const Data& data(*data_);
+	assert(_data != NULL);
+	const Data& data(*_data);
 
 	detail::Transition sentry(seconds, 0, 0);
 	const detail::Localtime* local = findLocaltime(data, sentry, detail::Comp(true));
@@ -293,8 +298,8 @@ struct tm TimeZone::toLocalTime(time_t seconds) const
 
 time_t TimeZone::fromLocalTime(const struct tm& localTm) const
 {
-	assert(data_ != NULL);
-	const Data& data(*data_);
+	assert(_data != NULL);
+	const Data& data(*_data);
 
 	struct tm tmp = localTm;
 	time_t seconds = ::timegm(&tmp); // FIXME: toUtcTime

@@ -19,7 +19,7 @@ async_logging::async_logging(const string& basename,
 	  _cond(_mutex),
 	  _current_buffer(new buffer_t),
 	  _next_buffer(new buffer_t),
-	  _buffers()
+      _buffers()
 {
 	_current_buffer->bzero();
 	_next_buffer->bzero();
@@ -33,7 +33,19 @@ async_logging::~async_logging()
 	{
 		stop();
 	}
+
+    for(auto it = _buffers.begin(); it != _buffers.end(); it++)
+    {
+        if( *it != 0 )
+            delete *it;
+    }
+
+    if( _current_buffer )
+        delete _current_buffer;
+    if( _next_buffer )
+        delete _next_buffer;
 }
+
 
 
 void async_logging::start()
@@ -59,15 +71,16 @@ void async_logging::append(const char* logline, int len)
 	}
 	else
 	{
-		_buffers.push_back(_current_buffer.release());
+		_buffers.push_back(_current_buffer);
 
 		if (_next_buffer)
 		{
-			_current_buffer = boost::ptr_container::move(_next_buffer);
+			_current_buffer = _next_buffer;
+            _next_buffer = 0;
 		}
 		else
 		{
-			_current_buffer.reset(new buffer_t); // Rarely happens
+			_current_buffer = new buffer_t; // Rarely happens
 		}
 		_current_buffer->append(logline, len);
 		_cond.notify();
@@ -80,8 +93,8 @@ void async_logging::thread_func()
 	_latch.count_down();
 
 	log_file output(_basename, _roll_size, false);
-	buffer_ptr new_buffer1(new buffer_t);
-	buffer_ptr new_buffer2(new buffer_t);
+	buffer_ptr new_buffer1(new buffer_t());
+	buffer_ptr new_buffer2(new buffer_t());
 	new_buffer1->bzero();
 	new_buffer2->bzero();
 
@@ -100,12 +113,14 @@ void async_logging::thread_func()
 			{
 				_cond.wait_for_seconds(_flush_interval);
 			}
-			_buffers.push_back(_current_buffer.release());
-			_current_buffer = boost::ptr_container::move(new_buffer1);
+			_buffers.push_back(_current_buffer);
+			_current_buffer = new_buffer1;
+            new_buffer1 = 0;
 			buffers_to_write.swap(_buffers);
 			if (!_next_buffer)
 			{
-				_next_buffer = boost::ptr_container::move(new_buffer2);
+				_next_buffer = new_buffer2;
+                new_buffer2 = 0;
 			}
 		}
 
@@ -125,7 +140,7 @@ void async_logging::thread_func()
 		for (size_t i = 0; i < buffers_to_write.size(); ++i)
 		{
 			// FIXME: use unbuffered stdio FILE ? or use ::writev ?
-			output.append(buffers_to_write[i].data(), buffers_to_write[i].length());
+			output.append(buffers_to_write[i]->data(), buffers_to_write[i]->length());
 		}
 
 		if (buffers_to_write.size() > 2)
@@ -137,14 +152,21 @@ void async_logging::thread_func()
 		if (!new_buffer1)
 		{
 			assert(!buffers_to_write.empty());
-			new_buffer1 = buffers_to_write.pop_back();
+			new_buffer1 = buffers_to_write.back(); 
+            buffers_to_write.pop_back();
 			new_buffer1->reset();
 		}
 
 		if (!new_buffer2)
 		{
-			assert(!buffers_to_write.empty());
-			new_buffer2 = buffers_to_write.pop_back();
+			//assert(!buffers_to_write.empty());
+            if(!buffers_to_write.empty())
+            {
+			    new_buffer2 = buffers_to_write.back();
+                buffers_to_write.pop_back();
+            }
+            else
+                new_buffer2 = new buffer_t;
 			new_buffer2->reset();
 		}
 
@@ -152,4 +174,8 @@ void async_logging::thread_func()
 		output.flush();
 	}
 	output.flush();
+    if(new_buffer1)
+        delete new_buffer1;
+    if(new_buffer2)
+        delete new_buffer2;
 }

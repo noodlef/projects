@@ -247,7 +247,7 @@ fmt::fmt(const char* fmt, T val)
 	BOOST_STATIC_ASSERT(boost::is_arithmetic<T>::value == true);
 
 	_length = snprintf(_buf, sizeof _buf, fmt, val);
-	assert(static_cast<size_t>(length_) < sizeof buf_);
+	assert(static_cast<size_t>(_length) < sizeof _buf);
 }
 
 // Explicit instantiations

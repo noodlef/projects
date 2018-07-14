@@ -33,6 +33,7 @@ thread_pool::~thread_pool()
 void thread_pool::start(int numThreads)
 {
 	assert(_threads.empty());
+    assert(_running == false);
 	_running = true;
 	_threads.reserve(numThreads);
 	for (int i = 0; i < numThreads; ++i)
@@ -132,11 +133,11 @@ void thread_pool::run_in_thread()
 			}
 		}
 	}
-	catch (const exception& ex)
+	catch (const muduo_exception& ex)
 	{
 		fprintf(stderr, "exception caught in ThreadPool %s\n", _name.c_str());
 		fprintf(stderr, "reason: %s\n", ex.what());
-		fprintf(stderr, "stack trace: %s\n", ex.stackTrace());
+		fprintf(stderr, "stack trace: %s\n", ex.stack_trace());
 		abort();
 	}
 	catch (const std::exception& ex)

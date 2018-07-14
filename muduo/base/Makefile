@@ -12,10 +12,12 @@
 	echo -e "\033[31m target is successfully compiled! \033[0m"
 
   # 目标文件
-  OBJECTS = muduo_mutex.o muduo_condition.o muduo_latch.o muduo_thread.o exception.o
-
+OBJECTS = muduo_mutex.o muduo_condition.o muduo_latch.o muduo_thread.o exception.o \
+		  thread_pool.o time_stamp.o process_info.o file_util.o date.o log_file.o  \
+		  log_stream.o logger.o  test1.o async_logging.o log_test.o
+			
   target : $(OBJECTS)
-	#$(CC) -o target $(OBJECTS) $(LIBS_PATH) $(LIBS)  
+	$(CC) -o target $(OBJECTS) $(LIBS_PATH) $(LIBS)  
 
   muduo_mutex.o : muduo_mutex.h 
 	$(CC) $(CFLAGS) $(HEAD_PATH) -c muduo_mutex.cpp 
@@ -31,6 +33,39 @@
 
   exception.o : exception.h 
 	$(CC) $(CFLAGS) $(HEAD_PATH) -c exception.cpp 
+  
+  thread_pool.o : thread_pool.h exception.h 
+	$(CC) $(CFLAGS) $(HEAD_PATH) -c thread_pool.cpp 
+
+  process_info.o : process_info.h current_thread.h file_util.h 
+	$(CC) $(CFLAGS) $(HEAD_PATH) -c process_info.cpp 
+  
+  time_stamp.o : time_stamp.h  
+	$(CC) $(CFLAGS) $(HEAD_PATH) -c time_stamp.cpp 
+
+  file_util.o : file_util.h #logger.h  
+	$(CC) $(CFLAGS) $(HEAD_PATH) -c file_util.cpp 
+
+  date.o : date.h  
+	$(CC) $(CFLAGS) $(HEAD_PATH) -c date.cpp 
+
+  log_file.o : log_file.h process_info.h file_util.h 
+	$(CC) $(CFLAGS) $(HEAD_PATH) -c log_file.cpp  
+  
+  log_stream.o : log_stream.h 
+	$(CC) $(CFLAGS) $(HEAD_PATH) -c log_stream.cpp 
+
+  logger.o : logger.h current_thread.h time_stamp.h 
+	$(CC) $(CFLAGS) $(HEAD_PATH) -c logger.cpp 
+
+  async_logging.o : async_logging.h log_file.h time_stamp.h async_logging.cpp 
+	$(CC) $(CFLAGS) $(HEAD_PATH) -c async_logging.cpp 
+  test1.o : test1.cpp 
+	$(CC) $(CFLAGS) $(HEAD_PATH) -c test1.cpp 
+  log_test.o : log_test.cpp 
+	$(CC) $(CFLAGS) $(HEAD_PATH) -c log_test.cpp 
+
+
 
 
   .PHONY : clean

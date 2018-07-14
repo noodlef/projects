@@ -8,7 +8,7 @@
 //
 
 #include "file_util.h"
-#include "logger.h" // strerror_tl
+//#include "logger.h" // strerror_tl
 
 #include <boost/static_assert.hpp>
 
@@ -25,7 +25,7 @@ file_util::append_file::append_file(string_arg filename)
 	: _fp(::fopen(filename.c_str(), "ae")),  // 'e' for O_CLOEXEC
 	  _written_bytes(0)
 {
-	assert(fp_);
+	assert(_fp);
 	// 设置流的缓冲区
 	::setbuffer(_fp, _buffer, sizeof _buffer);
 	// posix_fadvise POSIX_FADV_DONTNEED ?
@@ -48,7 +48,7 @@ void file_util::append_file::append(const char* logline, const size_t len)
 			int err = ferror(_fp);
 			if (err)
 			{
-				fprintf(stderr, "AppendFile::append() failed %s\n", strerror_tl(err));
+				//fprintf(stderr, "AppendFile::append() failed %s\n", strerror_tl(err));
 			}
 			break;
 		}
@@ -67,19 +67,21 @@ void file_util::append_file::flush()
 size_t file_util::append_file::write(const char* logline, size_t len)
 {
 	// #undef fwrite_unlocked
+    // linux 环境中fwrite 是加锁的 
 	return ::fwrite_unlocked(logline, 1, len, _fp);
 }
 
 /////////////////////////////////// read_small_file ///////////////////////////////////////
 file_util::read_small_file::read_small_file(string_arg filename)
 	: _fd(::open(filename.c_str(), O_RDONLY | O_CLOEXEC)),
-	  _err(0)
+      _load_ok(false),
+      _file_size(0)
 {
-	_buf[0] = '\0';
-	if (_fd < 0)
-	{
-		_err = errno;
-	}
+	//_buf[0] = '\0';
+    if(_fd < 0){
+        printf("file_util: cant't open %s", filename.c_str());
+    }
+    read_to_buffer(NULL);
 }
 
 file_util::read_small_file::~read_small_file()
@@ -100,81 +102,78 @@ int file_util::read_small_file::read_to_string(int maxSize,
 {
 	BOOST_STATIC_ASSERT(sizeof(off_t) == 8);
 	assert(content != NULL);
-	int err = _err;
-	if (_fd >= 0)
+    if(!_load_ok)
+    {
+        return -1;
+    }
+	content->clear();
+	if (_file_size)
 	{
-		content->clear();
-
-		if (fileSize)
+		struct stat statbuf;
+		if (::fstat(_fd, &statbuf) == 0)
 		{
-			struct stat statbuf;
-			if (::fstat(_fd, &statbuf) == 0)
+			content->reserve(static_cast<int>(std::min(implicit_cast<int64_t>(maxSize),_file_size)));
+			if (modifyTime)
 			{
-				if (S_ISREG(statbuf.st_mode))
-				{
-					*fileSize = statbuf.st_size;
-					content->reserve(static_cast<int>(std::min(implicit_cast<int64_t>(maxSize), *fileSize)));
-				}
-				else if (S_ISDIR(statbuf.st_mode))
-				{
-					err = EISDIR;
-				}
-				if (modifyTime)
-				{
-					*modifyTime = statbuf.st_mtime;
-				}
-				if (createTime)
-				{
-					*createTime = statbuf.st_ctime;
-				}
+				*modifyTime = statbuf.st_mtime;
 			}
-			else
+			if (createTime)
 			{
-				err = errno;
+				*createTime = statbuf.st_ctime;
 			}
 		}
+    }
 
-		while (content->size() < implicit_cast<size_t>(maxSize))
-		{
-			size_t toRead = std::min(implicit_cast<size_t>(maxSize) - content->size(), sizeof(_buf));
-			ssize_t n = ::read(_fd, _buf, toRead);
-			if (n > 0)
-			{
-				content->append(_buf, n);
-			}
-			else
-			{
-				if (n < 0)
-				{
-					err = errno;
-				}
-				break;
-			}
-		}
-	}
-	return err;
+    content->append(_buf, _file_size);
+	return 0; 
 }
 
 int file_util::read_small_file::read_to_buffer(int* size)
 {
-	int err = _err;
-	if (_fd >= 0)
-	{
-		size_t n = ::pread(_fd, _buf, sizeof(_buf) - 1, 0);
-		if (n >= 0)
-		{
-			if (size)
-			{
-				*size = static_cast<int>(n);
-			}
-			_buf[n] = '\0';
-		}
-		else
-		{
-			err = errno;
-		}
-	}
-	return err;
+    if(_fd < 0)
+        return -1; 
+    if(_load_ok)
+    {
+        if(size)
+        {
+            *size = _file_size; 
+        }
+        return 0;
+    }
+    
+    struct stat statbuf;
+
+    if(::fstat(_fd, &statbuf) == 0)
+    {
+        if(S_ISREG(statbuf.st_mode))
+        {
+            _file_size = statbuf.st_size;
+        }
+        else
+            return EISDIR;
+    }
+    else
+        return -1;
+
+    int64_t to_read = std::min(_file_size, static_cast<int64_t>(sizeof(_buf)));
+    int64_t cnt = 0;
+    while(to_read > 0)
+    {
+        ssize_t n = ::read(_fd, _buf + cnt, to_read);
+        if(n < 0)
+        {
+            break;
+        }
+        cnt += n;
+        to_read -= n;
+    }
+    
+    if(to_read == 0)
+    {
+        _load_ok = true;
+        if(size) *size = _file_size;
+    }
+    return to_read ? -1 : 0;
 }
 
 template int file_util::read_file(string_arg filename,

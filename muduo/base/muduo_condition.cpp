@@ -31,7 +31,7 @@ void muduo_condition::wait()
 // returns true if time out, false otherwise.
 bool muduo_condition::wait_for_seconds(double seconds)
 {
-
+    this->wait();
 }
 	
 // 唤醒一个等待该条件的线程

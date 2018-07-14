@@ -16,7 +16,8 @@
 
 namespace muduo
 {
-
+    // 有界队列，当超过队列设定的最大长度时
+    // 队列前面的元素会被后面添加的元素覆盖
 	template<typename T>
 	class bounded_blocking_queue : boost::noncopyable
 	{

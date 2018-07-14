@@ -4,6 +4,7 @@
 
 #include "copyable.h"
 #include "types.h"
+#include <sys/time.h>
 
 #include <boost/operators.hpp>
 
@@ -15,9 +16,9 @@ namespace muduo
 	// This class is immutable.
 	// It's recommended to pass it by value, since it's passed in register on x64.
 	
-	class time_stamp : public muduo::copyable
-		//public boost::equality_comparable<time_stamp>,
-		//public boost::less_than_comparable<time_stamp>
+	class time_stamp : public muduo::copyable,
+		public boost::equality_comparable<time_stamp>,
+		public boost::less_than_comparable<time_stamp>
 	{
 	public:
 		
@@ -36,6 +37,7 @@ namespace muduo
 		}
 
 		// default copy/assignment/dtor are Okay
+        // second.micro_second
 		string to_string() const;
 
 		string to_formatted_string(bool showMicroseconds = true) const;

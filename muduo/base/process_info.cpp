@@ -88,7 +88,7 @@ string process_info::username()
 	char buf[8192];
 	const char* name = "unknownuser";
 
-	getpwuid_r(uid(), &pwd, buf, sizeof buf, &result);
+	::getpwuid_r(uid(), &pwd, buf, sizeof buf, &result);
 	if (result)
 	{
 		name = pwd.pw_name;

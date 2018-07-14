@@ -26,15 +26,15 @@ namespace muduo
 
 		// compile time calculation of basename of source file
 		// 获取文件名 eg filename = "/etc/test.log" --> source_file = "test.log"
-		class source_file
-		{
+	  class source_file
+	  {
 		public:
 			template<int N>
 			inline source_file(const char(&arr)[N])
 				: _data(arr),
 				  _size(N - 1)
 			{
-				const char* slash = strrchr(data_, '/'); // builtin function
+				const char* slash = strrchr(_data, '/'); // builtin function
 				if (slash)
 				{
 					_data = slash + 1;
@@ -72,7 +72,7 @@ namespace muduo
 		typedef void(*flush_func)();
 		static void set_output(output_func);
 		static void set_flush(flush_func);
-		static void set_time_zone(const time_zone& tz);
+		//static void set_time_zone(const time_zone& tz);
 
 	private:
 
@@ -81,14 +81,14 @@ namespace muduo
 		public:
 			typedef logger::LOG_LEVEL LOG_LEVEL;
 			Impl(LOG_LEVEL level, int old_errno, const source_file& file, int line);
-			void format_time();
-			void finish();
+			void format_time(); /* 输出格式化时间戳 */
+			void finish(); /* 输出文件名， 行号， 换行符 */
 
-			time_stamp     _time;
-			log_stream     _stream;
-			LOG_LEVEL      _level;
-			int            _line;
-			source_file    _basename;
+			time_stamp     _time; /* time_stamp */
+			log_stream     _stream; /* log stream */
+			LOG_LEVEL      _level; /* log level */
+			int            _line; /* line number */
+			source_file    _basename; /* 文件名 */
 		};
 
 		Impl _impl;

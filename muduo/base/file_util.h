@@ -12,7 +12,7 @@
 #ifndef MUDUO_BASE_FILEUTIL_H
 #define MUDUO_BASE_FILEUTIL_H
 
-#include "string_piece.h"
+#include "string_piece.h" // for string_arg
 #include "boost/noncopyable.hpp"
 #include <sys/types.h>  // for off_t
 
@@ -47,7 +47,8 @@ namespace muduo
 
 		private:
 			int         _fd;
-			int         _err;
+            bool        _load_ok;
+            int64_t     _file_size;
 			char        _buf[kbuffer_size];
 		};
 

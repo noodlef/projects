@@ -20,7 +20,7 @@ log_file::log_file(const string&  basename,
 	  _flush_interval(flushInterval),
 	  _check_everyN(checkEveryN),
 	  _count(0),
-	  _mutex(threadSafe ? new muduo_lock : NULL),
+	  _mutex(threadSafe ? new muduo_mutex : NULL),
 	  _start_of_period(0),
 	  _last_roll(0),
 	  _last_flush(0)
@@ -61,13 +61,14 @@ void log_file::flush()
 void log_file::append_unlocked(const char* logline, int len)
 {
 	_file->append(logline, len);
-
+    // 首先判断文件的大小是否大于roll_size
 	if (_file->written_bytes() > _roll_size)
 	{
 		roll_file();
 	}
 	else
 	{
+        // 检查距离上次刷新写入日志的次数
 		++_count;
 		if (_count >= _check_everyN)
 		{
@@ -98,6 +99,7 @@ bool log_file::roll_file()
 		_last_roll = now;
 		_last_flush = now;
 		_start_of_period = start;
+        // ??? 这里是否需要加锁
 		_file.reset(new file_util::append_file(filename));
 		return true;
 	}
@@ -109,21 +111,20 @@ string log_file::get_logFileName(const string& basename, time_t* now)
 	string filename;
 	filename.reserve(basename.size() + 64);
 	filename = basename;
-
+    // 加上utc 时间
 	char timebuf[32];
 	struct tm tm;
 	*now = time(NULL);
 	::gmtime_r(now, &tm); // FIXME: localtime_r ?
 	strftime(timebuf, sizeof timebuf, ".%Y%m%d-%H%M%S.", &tm);
 	filename += timebuf;
-
+    // 加上hostname
 	filename += process_info::hostname();
-
+    // 加上进程的pid
 	char pidbuf[32];
 	snprintf(pidbuf, sizeof pidbuf, ".%d", process_info::pid());
 	filename += pidbuf;
-
+    // 加上.log
 	filename += ".log";
-
 	return filename;
 }

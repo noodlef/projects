@@ -1,8 +1,7 @@
 #include"logger.h"
-
 #include "current_thread.h"
 #include "time_stamp.h"
-#include "time_zone.h"
+//#include "time_zone.h"
 
 #include <errno.h>
 #include <stdio.h>
@@ -15,9 +14,9 @@ namespace muduo
 
 	
 
-	__thread char    t_errno_buf[512];
-	__thread char    t_time[32];
-	__thread time_t  t_last_second;
+	__thread char    t_errno_buf[512]; // 存放上次写日志的错误信息
+	__thread char    t_time[32]; // 存放上次写日志的时间戳-- format string
+	__thread time_t  t_last_second; // 存放上次写日志的时间戳--秒数
 
 	const char* strerror_tl(int savedErrno)
 	{
@@ -36,7 +35,7 @@ namespace muduo
 			return logger::INFO;
 	}
 
-	logger::LOG_LEVEL g_logLevel = init_logLevel();
+	logger::LOG_LEVEL g_logLevel = init_LogLevel();
 
 	const char* log_level_name[logger::NUM_LOG_LEVELS] =
 	{
@@ -87,9 +86,9 @@ namespace muduo
 		fflush(stdout);
 	}
 
-	logger::output_func g_output = defaultOutput;
-	logger::flush_func  g_flush = defaultFlush;
-	time_zone g_logTimeZone;
+	logger::output_func g_output = default_output;
+	logger::flush_func  g_flush = default_flush;
+	// time_zone g_logTimeZone;
 
 }
 
@@ -121,8 +120,9 @@ void logger::Impl::format_time()
 	int microseconds = static_cast<int>(micro_seconds_sinceEpoch % time_stamp::kmicro_seconds_perSecond);
 	if (seconds != t_last_second)
 	{
-		t_lastSecond = seconds;
+		t_last_second = seconds;
 		struct tm tm_time;
+        /*
 		if (g_logTimeZone.valid())
 		{
 			tm_time = g_log_timeZone.to_local_time(seconds);
@@ -131,6 +131,9 @@ void logger::Impl::format_time()
 		{
 			::gmtime_r(&seconds, &tm_time); // FIXME TimeZone::fromUtcTime
 		}
+         */
+
+	    ::gmtime_r(&seconds, &tm_time); // FIXME TimeZone::fromUtcTime
 
 		int len = snprintf(t_time, sizeof(t_time), "%4d%02d%02d %02d:%02d:%02d",
 			tm_time.tm_year + 1900, tm_time.tm_mon + 1, tm_time.tm_mday,
@@ -138,7 +141,7 @@ void logger::Impl::format_time()
 		assert(len == 17); (void)len;
 	}
 
-	if (g_logTimeZone.valid())
+	if (false /* g_logTimeZone.valid() */)
 	{
 		fmt us(".%06d ", microseconds);
 		assert(us.length() == 8);
@@ -204,7 +207,9 @@ void logger::set_flush(flush_func flush)
 	g_flush = flush;
 }
 
+/*
 void logger::set_time_zone(const time_zone& tz)
 {
 	g_logTimeZone = tz;
 }
+ */
