@@ -26,8 +26,10 @@ namespace muduo
 		// returns true if time out, false otherwise.
 		bool wait_for_seconds(double seconds);
 
+        /* 唤醒一个等待该条件的线程 */
 		void notify();
 
+        /* 唤醒所有等待该条件的线程 */
 		void notify_all();
 
 	private:

@@ -1,12 +1,14 @@
 #include"muduo_condition.h"
+
 #include<assert.h>
+#include<time.h>
 
 // 检测返回值是否为0
 #define MCHECK(ret) ({                   \
         typeof(ret) errnum = (ret);      \
         assert(errnum == 0);             \
         (void) errnum;                   \
-    })
+})
 
 
 using namespace muduo;
@@ -32,8 +34,16 @@ void muduo_condition::wait()
 bool muduo_condition::wait_for_seconds(double seconds)
 {
     this->wait();
-}
-	
+    struct timespec abstime;
+    ::clock_gettime(CLOCK_REALTIME, &abstime);
+    abstime.tv_sec += seconds; 
+
+    _mutex.unassign_holder();
+    int error = ::pthread_cond_timedwait(&_pcond, _mutex.get_pthread_mutex(), &abstime);
+    _mutex.assign_holder();
+    return error == ETIMEDOUT;
+} 
+
 // 唤醒一个等待该条件的线程
 void muduo_condition::notify()
 {

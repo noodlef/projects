@@ -19,7 +19,8 @@ namespace muduo
 		extern __thread int             t_tid_string_length;
 		extern __thread const char*     t_thread_name;
 		void cache_tid();
-
+        
+        // 返回线程 id
 		inline int tid()
 		{
             // _builtin_expect(expr, value) 告知编译器expr == value的概率很大
@@ -30,24 +31,27 @@ namespace muduo
 			return t_cached_tid;
 		}
 
-		inline const char* tid_string() // for logging
+		inline const char* tid_string() 
 		{
 			return t_tid_string;
 		}
 
-		inline int tid_string_length() // for logging
+		inline int tid_string_length() 
 		{
 			return t_tid_string_length;
 		}
 
+        // 返回线程的名字
 		inline const char* name()
 		{
 			return t_thread_name;
 		}
 
+        // 判断是否主线程
 		bool is_main_thread();
 
-		//void sleep_usec(int64_t usec);
+        // 进入可中断睡眠状态 @usec 单位微妙
+		void sleep_usec(int64_t usec);
 	}
 }
 

@@ -4,7 +4,6 @@
 // Author: Shuo Chen (chenshuo at chenshuo dot com)
 
 #include "thread_pool.h"
-
 #include "exception.h"
 
 #include <boost/bind.hpp>

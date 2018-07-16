@@ -11,11 +11,12 @@
 
 namespace muduo
 {
-    // muduo_mutex 不能是局部对象
+    // muduo_mutex 
 	class muduo_mutex : boost::noncopyable
 	{
 	public:
 		muduo_mutex();
+
 		~muduo_mutex();
 
 		// must be called when locked, i.e. for assertion
@@ -36,8 +37,8 @@ namespace muduo
 
 		void assign_holder();
 
-		pthread_mutex_t   _mutex;
-		pid_t             _holder;
+		pthread_mutex_t     _mutex;
+		pid_t               _holder;/* 当前获得互斥量的线程 tid */
 	};
 
     // helper class used by muduo_mutex

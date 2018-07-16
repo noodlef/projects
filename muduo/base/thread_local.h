@@ -7,13 +7,22 @@
 #ifndef MUDUO_BASE_THREADLOCAL_H
 #define MUDUO_BASE_THREADLOCAL_H
 
-#include "muduo_mutex.h"  // MCHECK
 #include <boost/noncopyable.hpp>
-#include <pthread.h>
+#include <pthread.h
+
+// 检测返回值是否为0
+#define MCHECK(ret) ({                   \
+        typeof(ret) errnum = (ret);      \
+        assert(errnum == 0);             \
+        (void) errnum;                   \
+})
 
 namespace muduo
 {
 
+    /**
+     * 线程局部对象
+     */
 	template<typename T>
 	class thread_local : boost::noncopyable
 	{

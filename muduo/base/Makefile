@@ -14,7 +14,7 @@
   # 目标文件
 OBJECTS = muduo_mutex.o muduo_condition.o muduo_latch.o muduo_thread.o exception.o \
 		  thread_pool.o time_stamp.o process_info.o file_util.o date.o log_file.o  \
-		  log_stream.o logger.o  test1.o async_logging.o log_test.o
+		  log_stream.o logger.o  test1.o async_logging.o log_test.o current_thread.o
 			
   target : $(OBJECTS)
 	$(CC) -o target $(OBJECTS) $(LIBS_PATH) $(LIBS)  
@@ -60,10 +60,15 @@ OBJECTS = muduo_mutex.o muduo_condition.o muduo_latch.o muduo_thread.o exception
 
   async_logging.o : async_logging.h log_file.h time_stamp.h async_logging.cpp 
 	$(CC) $(CFLAGS) $(HEAD_PATH) -c async_logging.cpp 
+
   test1.o : test1.cpp 
 	$(CC) $(CFLAGS) $(HEAD_PATH) -c test1.cpp 
+
   log_test.o : log_test.cpp 
 	$(CC) $(CFLAGS) $(HEAD_PATH) -c log_test.cpp 
+
+ current_thread.o : current_thread.cpp current_thread.h 
+	$(CC) $(CFLAGS) $(HEAD_PATH) -c current_thread.cpp 
 
 
 

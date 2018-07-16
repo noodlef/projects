@@ -20,6 +20,10 @@
 
 namespace muduo
 {
+    /*
+     * 线程池-随机选择空闲线程去处理任务队列中任务
+     *
+     */
 
 	class thread_pool : boost::noncopyable
 	{
@@ -27,6 +31,7 @@ namespace muduo
 		typedef boost::function<void()> task_t;
 
 		explicit thread_pool(const string& nameArg = string("ThreadPool"));
+
 		~thread_pool();
 
 		// Must be called before start().
@@ -43,7 +48,7 @@ namespace muduo
 		size_t queue_size() const;
 
 		// Could block if maxQueueSize > 0
-        // add task to thread_pool
+        // push task to task queue 
 		void run(const task_t& f);
 
 	private:
@@ -51,15 +56,15 @@ namespace muduo
 		void run_in_thread();
 		task_t take();
 
-		mutable muduo_mutex                    _mutex;
-		muduo_condition                        _not_empty;
-		muduo_condition                        _not_full;
-		string                                 _name;
-		task_t                                 _thread_init_callback;
+		mutable muduo_mutex     _mutex;
+		muduo_condition         _not_empty;
+		muduo_condition         _not_full;
+		std::deque<task_t>      _queue;
+		string  _name;
+		task_t  _thread_init_callback;
+		size_t  _max_queue_size;/* 最大可处理任务个数 */
+		bool    _running;
 		boost::ptr_vector<muduo::muduo_thread> _threads;
-		std::deque<task_t>                     _queue;
-		size_t                                 _max_queue_size;
-		bool                                   _running;
 	};
 
 }

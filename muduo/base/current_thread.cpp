@@ -1,8 +1,17 @@
 #include"current_thread.h"
+#include"time_stamp.h"
+
+#include<boost/static_assert.hpp>
+#include<boost/type_traits/is_same.hpp>
+
+#include<sys/syscall.h>
+#include<time.h> // for nanosleep
 
 /* namespace current_thread */
-namespace muduo {
-	namespace current_thread {
+namespace muduo 
+{
+	namespace current_thread 
+    {
 
 		/* definitions */
 		__thread int t_cached_tid = 0;
@@ -30,18 +39,19 @@ namespace muduo {
 		{
 			return tid() == ::getpid();
 		}
-        /*
+        
+        // @usec ΢�λ
 		void sleep_usec(int64_t usec)
 		{
 			struct timespec ts = { 0, 0 };
 			ts.tv_sec = static_cast<time_t>(usec /
-				times_tamp::kMicro_seconds_perSecond);
+				time_stamp::kmicro_seconds_perSecond);
 			ts.tv_nsec = static_cast<long>(usec %
-				time_stamp::kMicro_seconds_perSecond * 1000);
+				time_stamp::kmicro_seconds_perSecond * 1000);
 			::nanosleep(&ts, NULL);/* task_interrputible */
-		}
-        */
-	}
-}
+		} 
+	}// end of current_thread 
+
+}// end of muduo
 
 
